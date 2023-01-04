@@ -109,3 +109,9 @@ kind 클러스터에 ingress-nginx, gRPC 를 배포하는 가이드입니다.
 ### 1. [gRPC 튜토리얼 배포하기](mission.1/README.md)  
 
 kind 클러스터에 [gRPC - Basics tutorial](https://grpc.io/docs/languages/go/basics/) 를 배포하는 가이드입니다.  
+
+<br/><br/><br/>
+
+## [참고자료](references/README.md)  
+
+가이드를 작성할 때 참고했던 자료들입니다.  

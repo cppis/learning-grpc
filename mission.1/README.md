@@ -120,9 +120,6 @@ go run client/client.go -tls=true -addr=localhost:443
 
 <br/><br/><br/>
 
-## 참고자료  
+## [참고자료](../references/README.md)  
 
-* [gRPC | Introduction to gRPC](https://grpc.io/docs/what-is-grpc/introduction/)  
-* [gRPC | Basics tutorial](https://grpc.io/docs/languages/go/basics/)  
-* [Building a gRPC Server in Go](https://sahansera.dev/building-grpc-server-go/)  
-* [grpc/grpc-go](https://github.com/grpc/grpc-go)  
+가이드를 작성할 때 참고했던 자료들입니다.  
