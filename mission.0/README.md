@@ -5,7 +5,7 @@ kind 클러스터에 ingress-nginx, gRPC 를 배포하는 가이드입니다.
 먼저, 가이드를 실행하기 위해 작업 경로로 이동합니다:  
 
 ```bash
-cd mission.0
+cd $REPO_ROOT/mission.0
 ```
 
 <br/><br/><br/>
@@ -14,25 +14,10 @@ cd mission.0
 
 ### kind 클러스터와 Docker Registry 만들기  
 
-kind 의 `exportPortMapping` 구성 옵션을 사용하여 호스트에서 kind Node 에서 실행하는 ingress controller 로 포트 포워딩을 할 수 있습니다.  
-
 [`kind-with-registry.sh`](./kind-with-registry.sh) 스크립트 실행하여 kind 클러스터와 Docker Registry 를 만듭니다:  
 
 ```bash
-./kind-with-registry.sh grpc
-```
-
-위 명령을 실행하면 *kind-grpc* 라는 클러스터가 생성됩니다.  
-`kind get clusters` 명령으로 새로 만든 grpc 클러스터를 확인할 수 있습니다:  
-
-```bash
-kind get clusters
-```
-
-grpc 클러스터를 삭제하려면 다음 명령을 실행합니다:  
-
-```bash
-kind delete cluster --name grpc
+../common/kind-with-registry.sh grpc
 ```
 
 <br/>
@@ -117,97 +102,12 @@ docker image push localhost:5001/go-grpc-greeter-server
 
 <br/>
 
-### gRPC 배포하기  
+### gRPC 서버 배포하기  
 
-다음 명령을 실행하여 *Deployment* 를 배포합니다:  
-
-```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: go-grpc-greeter-server
-  name: go-grpc-greeter-server
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: go-grpc-greeter-server
-  template:
-    metadata:
-      labels:
-        app: go-grpc-greeter-server
-    spec:
-      containers:
-      - image: localhost:5001/go-grpc-greeter-server   # Edit this for your reponame
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 50m
-            memory: 50Mi
-        name: go-grpc-greeter-server
-        ports:
-        - containerPort: 50051
-EOF
-```
-
-다음 명령을 실행하여 *Service* 를 배포합니다:  
+다음 명령을 실행하여 *Deployment*, *Service*, *Ingress* 를 배포합니다:  
 
 ```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: go-grpc-greeter-server
-  name: go-grpc-greeter-server
-spec:
-  ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 50051
-  selector:
-    app: go-grpc-greeter-server
-  type: ClusterIP
-EOF
-```
-
-다음 명령을 실행하여 *Ingress* 를 배포합니다:  
-
-```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
-  name: fortune-ingress
-  namespace: default
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: localhost
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: go-grpc-greeter-server
-            port:
-              number: 80
-  tls:
-    # This secret must exist beforehand
-    # The cert must also contain the subj-name grpctest.dev.mydomain.com
-    # https://github.com/kubernetes/ingress-nginx/blob/master/docs/examples/PREREQUISITES.md#tls-certificates
-    - secretName: tls-secret
-      hosts:
-        - localhost
-EOF
+kubectl apply -f mission.0.resources.yaml
 ```
 
 <br/><br/><br/>

@@ -12,6 +12,33 @@
 * [`Helm`](https://helm.sh/)  
 * [`Kind`](https://kind.sigs.k8s.io/)  
 
+<br/><br/><br/>
+
+## 준비하기  
+
+### kind 클러스터와 Docker Registry 만들기  
+
+kind 의 `exportPortMapping` 구성 옵션을 사용하여 호스트에서 kind Node 에서 실행하는 ingress controller 로 포트 포워딩을 할 수 있습니다.  
+
+[`kind-with-registry.sh`](./kind-with-registry.sh) 스크립트 실행하여 kind 클러스터와 Docker Registry 를 만듭니다:  
+
+```bash
+./common/kind-with-registry.sh grpc
+```
+
+위 명령을 실행하면 *kind-grpc* 라는 클러스터가 생성됩니다.  
+`kind get clusters` 명령으로 새로 만든 grpc 클러스터를 확인할 수 있습니다:  
+
+```bash
+kind get clusters
+```
+
+grpc 클러스터를 삭제하려면 다음 명령을 실행합니다:  
+
+```bash
+kind delete cluster --name grpc
+```
+
 <br/>
 
 ### localhost 에서 https 를 사용하기 위해 `mkcert` 설정하기  
@@ -45,6 +72,30 @@ mkcert localhost 127.0.0.1
 kubectl create secret tls tls-secret --cert=localhost+1.pem --key=localhost+1-key.pem
 ```
 
+<br/>
+
+### 저장소 루트를 환경변수로 정의하기  
+
+가이드에서 경로의 실수를 없애기 위해 저장소 루트 경로를 환경변수 `REPO_ROOT` 로 정의합니다:      
+
+```bash
+git clone https://dev-server.com2us.com/cppis/learning-grpc.git && cd learning-grpc
+export REPO_ROOT=$(pwd)
+```
+
+<br/><br/><br/>
+
+## 소개  
+
+이 글을 읽으시는 분은 [gRPC 소개](https://grpc.io/docs/what-is-grpc/introduction/)를 읽고, [protocol buffers](https://developers.google.com/protocol-buffers/docs/overview) 사용에 익숙하다고 가정하겠습니다.  
+튜토리얼 예제는 프로토콜 버퍼의 proto3 버전을 사용합니다: 자세한 내용은 [proto3 언어 가이드](https://developers.google.com/protocol-buffers/docs/proto3)와 [Go 생성 코드 가이드](https://developers.google.com/protocol-buffers/docs/reference/go-generated)에서 확인할 수 있습니다.  
+
+<br/>
+
+### gRPC를 사용하는 이유  
+
+gRPC를 사용하면 `.proto` 파일에서 한 번만 서비스를 정의하고 gRPC가 지원하는 모든 언어로 클라이언트와 서버를 생성할 수 있습니다. 그러면 대규모 데이터 센터 내부의 서버에서 자체 태블릿에 이르기까지 다양한 환경에서 실행할 수 있습니다. 다른 언어와 환경은 gRPC에서 처리합니다. 또한 효율적인 직렬화, 간단한 IDL 및 손쉬운 인터페이스 업데이트를 포함하여 프로토콜 버퍼 작업의 모든 이점을 얻습니다.  
+
 <br/><br/><br/>
 
 ## 미션  
@@ -55,6 +106,6 @@ kind 클러스터에 ingress-nginx, gRPC 를 배포하는 가이드입니다.
 
 <br/>
 
-### 1. [gRPC 배우기](mission.1/README.md)  
+### 1. [gRPC 튜토리얼 배포하기](mission.1/README.md)  
 
-...
+kind 클러스터에 [gRPC - Basics tutorial](https://grpc.io/docs/languages/go/basics/) 를 배포하는 가이드입니다.  
