@@ -16,7 +16,9 @@
 
 ### localhost 에서 https 를 사용하기 위해 `mkcert` 설정하기  
 
-이 과정은 localhost 에서 https 를 사용하기 위한 설정입니다.  
+이 가이드는 localhost 를 기준으로 작성되었습니다.  
+
+다음은 localhost 에서 https 를 사용하기 위한 설정입니다.  
 
 일반적인 TLS 인증서를 설정하려면 [kubernetes/ingress-nginx](https://github.com/kubernetes/ingress-nginx)의 [PREREQUISITES tls-certificates](https://github.com/kubernetes/ingress-nginx/blob/main/docs/examples/PREREQUISITES.md#tls-certificates) 과정을 참고하세요.  
 
